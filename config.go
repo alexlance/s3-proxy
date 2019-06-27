@@ -15,8 +15,6 @@ type sitesCfg []Site
 
 const (
 	kConfigName      = "S3PROXY_CONFIG"
-	kAWSKeyName      = "S3PROXY_AWS_KEY"
-	kAWSSecretName   = "S3PROXY_AWS_SECRET"
 	kAWSRegionName   = "S3PROXY_AWS_REGION"
 	kAWSBucketName   = "S3PROXY_AWS_BUCKET"
 	kUsersName       = "S3PROXY_USERS"
@@ -83,8 +81,6 @@ func createSingle() (http.Handler, error) {
 	}
 
 	s := Site{
-		AWSKey:    os.Getenv(kAWSKeyName),
-		AWSSecret: os.Getenv(kAWSSecretName),
 		AWSRegion: os.Getenv(kAWSRegionName),
 		AWSBucket: os.Getenv(kAWSBucketName),
 		Users:     users,
@@ -103,7 +99,7 @@ func createSingle() (http.Handler, error) {
 func createSiteHandler(s Site) http.Handler {
 	var handler http.Handler
 
-	proxy := NewS3Proxy(s.AWSKey, s.AWSSecret, s.AWSRegion, s.AWSBucket)
+	proxy := NewS3Proxy(s.AWSRegion, s.AWSBucket)
 	handler = NewProxyHandler(proxy, s.Options.Prefix)
 
 	if s.Options.Website {
@@ -183,14 +179,6 @@ func (s Site) validateWithHost() error {
 }
 
 func (s Site) validate() error {
-	if s.AWSKey == "" {
-		return errors.New("AWS Key not specified")
-	}
-
-	if s.AWSSecret == "" {
-		return errors.New("AWS Secret not specified")
-	}
-
 	if s.AWSRegion == "" {
 		return errors.New("AWS Region not specified")
 	}

@@ -10,8 +10,6 @@ import (
 
 type Site struct {
 	Host      string  `json:"host"`
-	AWSKey    string  `json:"awsKey"`
-	AWSSecret string  `json:"awsSecret"`
 	AWSRegion string  `json:"awsRegion"`
 	AWSBucket string  `json:"awsBucket"`
 	Users     []User  `json:"users"`

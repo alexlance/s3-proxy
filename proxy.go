@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 )
@@ -17,10 +16,9 @@ type RealS3Proxy struct {
 	s3     *s3.S3
 }
 
-func NewS3Proxy(key, secret, region, bucket string) S3Proxy {
+func NewS3Proxy(region, bucket string) S3Proxy {
 	sess := session.Must(session.NewSession(&aws.Config{
-		Region:      aws.String(region),
-		Credentials: credentials.NewStaticCredentials(key, secret, ""),
+		Region: aws.String(region),
 	}))
 
 	return &RealS3Proxy{
